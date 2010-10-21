@@ -62,8 +62,10 @@
 			hint="The data to cache." />
 		
 		<cfscript>
+		var hashedKey = hashKey(arguments.key);
+		
 		// write the element to the cache
-		cachePut( arguments.key, arguments.data, getCacheTimespan(), getIdleTimespan(),	getCacheName() );
+		cachePut( hashedKey, arguments.data, getCacheTimespan(), getIdleTimespan(),	getCacheName() );
 		</cfscript>
 
 	</cffunction>
@@ -109,7 +111,9 @@
 			hint="The unique key for the data to check if it is in the cache." />
 
 		<cfscript>
-		return cachekeyexists( arguments.key, getCacheName() );
+		var hashedKey = hashKey(arguments.key);
+		
+		return cachekeyexists( hashedKey, getCacheName() );
 		</cfscript>
 
 	</cffunction>
@@ -120,7 +124,9 @@
 			hint="The unique key for the data to remove from the cache." />
 
 		<cfscript>
-		cacheremove( arguments.key, false, getCacheName() );
+		var hashedKey = hashKey(arguments.key);
+		
+		cacheremove( hashedKey, false, getCacheName() );
 		</cfscript>
 
 	</cffunction>
