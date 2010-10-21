@@ -1,1 +1,7 @@
 Custom caching strategies for the MachII (CFML) framework. http://www.mach-ii.com
+
+NativeCache.cfc
+---------------
+This uses the cfml engine's native cachePut() and cacheGet() methods. Written using Railo, but would require very little (if any) change to the PUT/GET methods to run this on any cfml engine which has access to cachePut() and cacheGet().
+
+Railo (and other cfml engines) provide a way to define different cache stores. This abstraction makes it trivial to switch your MachII caching between different cache servers, Memcached, EHCache, CouchDB, MongoDB, etc.
