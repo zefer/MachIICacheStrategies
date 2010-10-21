@@ -107,7 +107,11 @@
 		hint="Checks if an element exists by key in the cache.">
 		<cfargument name="key" type="string" required="true"
 			hint="The unique key for the data to check if it is in the cache." />
-		<cfabort showerror="This method is abstract and must be overrided." />
+
+		<cfscript>
+		return cachekeyexists( arguments.key, getCacheName() );
+		</cfscript>
+
 	</cffunction>
 	
 	<cffunction name="remove" access="public" returntype="void" output="false"
