@@ -64,6 +64,17 @@
 		<cfscript>
 		var hashedKey = hashKey(arguments.key);
 		
+		// update the cache stats
+		if( not keyExists(arguments.key) )
+		{
+			getCacheStats().incrementTotalElements(1);
+			getCacheStats().incrementActiveElements(1);
+		}
+		else
+		{
+			getCacheStats().incrementActiveElements(1);
+		}
+		
 		// write the element to the cache
 		cachePut( hashedKey, arguments.data, getCacheTimespan(), getIdleTimespan(),	getCacheName() );
 		</cfscript>
@@ -85,7 +96,12 @@
 		// if the requested element is in the cache, return it
 		if( isDefined("element") )
 		{
+			getCacheStats().incrementCacheHits(1);
 			return element;
+		}
+		else
+		{
+			getCacheStats().incrementCacheMisses(1);
 		}
 		</cfscript>
 		
@@ -95,7 +111,10 @@
 		hint="Flushes all elements from the cache.">
 		
 		<cfscript>
+		// clear this cache store
 		cacheclear( "", getCacheName() );
+		// clear the cache stats
+		getCacheStats().reset()
 		</cfscript>
 		
 	</cffunction>
