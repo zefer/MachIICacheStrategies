@@ -9,6 +9,7 @@
 --->
 <cfcomponent
  	displayname="NativeCache"
+	extends="MachII.caching.strategies.AbstractCacheStrategy"
 	output="false"
 	hint="A caching strategy that uses a cfml engine's native CachePut and CacheGet methods">
 	
@@ -26,24 +27,8 @@
 	<!---
 	INITIALIZATION / CONFIGURATION
 	--->
-	<cffunction name="init" access="public" returntype="AbstractCacheStrategy" output="false"
-		hint="Initializes the caching strategy. Do not override.">
-		<cfargument name="parameters" type="struct" required="false" default="#StructNew()#"
-			hint="A struct of configure time parameters." />
-		
-		<cfset setParameters(arguments.parameters) />
-		<cfset setAssert(CreateObject("component", "MachII.util.Assert").init()) />
-		
-		<cfreturn this />
-	</cffunction>
-	
 	<cffunction name="configure" access="public" returntype="void" output="false"
 		hint="Configures the strategy. Override to provide custom functionality.">
-		<!--- Does nothing. Override to provide custom functionality. --->
-	</cffunction>
-
-	<cffunction name="deconfigure" access="public" returntype="void" output="false"
-		hint="Deconfigures the strategy. Override to provide custom functionality.">
 		<!--- Does nothing. Override to provide custom functionality. --->
 	</cffunction>
 	
