@@ -91,12 +91,16 @@
 	
 	<cffunction name="flush" access="public" returntype="void" output="false"
 		hint="Flushes all elements from the cache.">
-		<cfabort showerror="This method is abstract and must be overrided." />
+		
+		<cfscript>
+		cacheclear( "", getCacheName() );
+		</cfscript>
+		
 	</cffunction>
 	
 	<cffunction name="reap" access="public" returntype="void" output="false"
 		hint="Reaps 'expired' cache elements.">
-		<cfabort showerror="This method is abstract and must be overrided." />
+		<cfabort showerror="Reaping expired cache elements is handled natively." />
 	</cffunction>
 	
 	<cffunction name="keyExists" access="public" returntype="boolean" output="false"
