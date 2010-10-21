@@ -118,7 +118,11 @@
 		hint="Removes a cached element by key.">
 		<cfargument name="key" type="string" required="true"
 			hint="The unique key for the data to remove from the cache." />
-		<cfabort showerror="This method is abstract and must be overrided." />
+
+		<cfscript>
+		cacheremove( arguments.key, false, getCacheName() );
+		</cfscript>
+
 	</cffunction>
 	
 	<!---
