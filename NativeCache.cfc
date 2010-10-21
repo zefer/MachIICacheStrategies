@@ -121,7 +121,7 @@
 	
 	<cffunction name="reap" access="public" returntype="void" output="false"
 		hint="Reaps 'expired' cache elements.">
-		<cfabort showerror="Reaping expired cache elements is handled natively." />
+		<cfabort showerror="Reaping expired cache elements is handled natively, this error is intentional as the reap method has not been implemented." />
 	</cffunction>
 	
 	<cffunction name="keyExists" access="public" returntype="boolean" output="false"
