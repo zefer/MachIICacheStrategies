@@ -60,14 +60,33 @@
 			hint="The unique key for the data to put in the cache." />
 		<cfargument name="data" type="any" required="true"
 			hint="The data to cache." />
-		<cfabort showerror="This method is abstract and must be overrided." />
+		
+		<cfscript>
+		// write the element to the cache
+		cachePut( arguments.key, arguments.data, getCacheTimespan(), getIdleTimespan(),	getCacheName() );
+		</cfscript>
+
 	</cffunction>
 	
 	<cffunction name="get" access="public" returntype="any" output="false"
 		hint="Gets an element by key from the cache.">
 		<cfargument name="key" type="string" required="true"
 			hint="The unique key for the data to get from the cache." />
-		<cfabort showerror="This method is abstract and must be overrided." />
+
+		<cfscript>
+		// create a hash of the key (so it's compatible with different cache stores)
+		var hashedKey = hashKey(arguments.key);
+		
+		// attempt to retrieve the element
+		var element = cacheGet(	hashedKey, false, getCacheName() );
+		
+		// if the requested element is in the cache, return it
+		if( isDefined("element") )
+		{
+			return element;
+		}
+		</cfscript>
+		
 	</cffunction>
 	
 	<cffunction name="flush" access="public" returntype="void" output="false"
@@ -97,6 +116,12 @@
 	<!---
 	PUBLIC FUNCTIONS - UTILS
 	--->
+	<cffunction name="hashKey" access="private" returntype="string" output="false"
+		hint="Creates a hash from a key name.">
+		<cfargument name="key" type="string" required="true"
+			hint="The key to hash." />
+		<cfreturn Hash(UCase(Trim(arguments.key))) />
+	</cffunction>
 	
 	<!---
 	ACCESSORS
