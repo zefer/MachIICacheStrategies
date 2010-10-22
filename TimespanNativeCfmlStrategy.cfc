@@ -27,16 +27,23 @@
 		<cfscript>
 		// set parameters
 		
+		// Optional: Specify the name of which cache to use - not supported by all cfml engines. To disable named caches, either specify an empty string, or don't provide this parameter.
 		if( isParameterDefined("cacheName") )
 		{
 			setCacheName( getParameter("cacheName") );
 		}
+		else
+		{
+			setCacheName( "" );
+		}
 		
+		// The duration until the object is flushed from the cache
 		if( isParameterDefined("cacheTimespan") and getAssert().isTrue(listLen(getParameter("cacheTimespan")) eq 4, "Invalid cacheTimespan of '#getParameter("cacheTimespan")#'.", "cacheTimespan must be set to a list of 4 numbers (days, hours, minutes, seconds)." ) )
 		{
 			setCacheTimespan( getParameter("cacheTimespan") );
 		}
 		
+		// A duration after which the object is flushed from the cache if it is not accessed during that time
 		if( isParameterDefined("idleTimespan") and getAssert().isTrue(listLen(getParameter("idleTimespan")) eq 4, "Invalid idleTimespan of '#getParameter("idleTimespan")#'.", "idleTimespan must be set to a list of 4 numbers (days, hours, minutes, seconds)." ) )
 		{
 			setIdleTimespan( getParameter("idleTimespan") );
@@ -70,7 +77,14 @@
 		}
 		
 		// write the element to the cache
-		cachePut( hashedKey, arguments.data, getCacheTimespan(), getIdleTimespan(),	getCacheName() );
+		if( isUsingNamedCache() )
+		{
+			cachePut( hashedKey, arguments.data, getCacheTimespan(), getIdleTimespan(),	getCacheName() );
+		}
+		else
+		{
+			cachePut( hashedKey, arguments.data, getCacheTimespan(), getIdleTimespan() );
+		}
 		</cfscript>
 
 	</cffunction>
@@ -84,8 +98,17 @@
 		// create a hash of the key (so it's compatible with different cache stores)
 		var hashedKey = hashKey(arguments.key);
 		
+		var element = "";
+		
 		// attempt to retrieve the element
-		var element = cacheGet(	hashedKey, false, getCacheName() );
+		if( isUsingNamedCache() )
+		{
+			element = cacheGet(	hashedKey, false, getCacheName() );
+		}
+		else
+		{
+			element = cacheGet(	hashedKey );
+		}
 		
 		// if the requested element is in the cache, return it
 		if( isDefined("element") )
@@ -106,7 +129,15 @@
 		
 		<cfscript>
 		// clear this cache store
-		cacheclear( "", getCacheName() );
+		if( isUsingNamedCache() )
+		{
+			cacheclear( "", getCacheName() );
+		}
+		else
+		{
+			cacheclear();
+		}
+		
 		// clear the cache stats
 		getCacheStats().reset()
 		</cfscript>
@@ -139,19 +170,32 @@
 		<cfscript>
 		var hashedKey = hashKey(arguments.key);
 		
-		cacheremove( hashedKey, false, getCacheName() );
+		// remove this element from the cache
+		if( isUsingNamedCache() )
+		{
+			cacheremove( hashedKey, false, getCacheName() );
+		}
+		else
+		{
+			cacheremove( hashedKey, false );
+		}
 		</cfscript>
 
 	</cffunction>
 	
 	<!---
-	PUBLIC FUNCTIONS - UTILS
+	PRIVATE FUNCTIONS - UTILS
 	--->
 	<cffunction name="hashKey" access="private" returntype="string" output="false"
 		hint="Creates a hash from a key name.">
 		<cfargument name="key" type="string" required="true"
 			hint="The key to hash." />
 		<cfreturn Hash(UCase(Trim(arguments.key))) />
+	</cffunction>
+	
+	<cffunction name="isUsingNamedCache" access="private" returntype="boolean" output="false" hint="Are we using a named cache, or the default? Not all cfml engines support named caches.">
+		<!--- we're using a named cache if the cache name isn't an empty string --->
+		<cfreturn len(getCacheName()) gt 0 />
 	</cffunction>
 	
 	<!---
