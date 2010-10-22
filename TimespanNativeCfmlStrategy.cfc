@@ -20,7 +20,6 @@
 	<cfset variables.instance.strategyTypeName = "Native CachePut/CacheGet" />
 	<cfset variables.parameters = StructNew() />
 	<cfset variables.parameters.cachingEnabled = true />
-	<cfset variables.cacheStats = CreateObject("component", "MachII.caching.CacheStats").init() />
 	<cfset variables.log = 0 />
 	<cfset variables.assert = "" />
 	
