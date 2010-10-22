@@ -8,7 +8,7 @@
 
 --->
 <cfcomponent
- 	displayname="NativeCache"
+ 	displayname="TimespanNativeCfmlStrategy"
 	extends="MachII.caching.strategies.AbstractCacheStrategy"
 	output="false"
 	hint="A caching strategy that uses a cfml engine's native CachePut and CacheGet methods">
