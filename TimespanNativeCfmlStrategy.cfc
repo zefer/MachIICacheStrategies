@@ -16,12 +16,7 @@
 	<!---
 	PROPERTIES
 	--->
-	<cfset variables.instance = StructNew() />
 	<cfset variables.instance.strategyTypeName = "Native CachePut/CacheGet" />
-	<cfset variables.parameters = StructNew() />
-	<cfset variables.parameters.cachingEnabled = true />
-	<cfset variables.log = 0 />
-	<cfset variables.assert = "" />
 	
 	<!---
 	INITIALIZATION / CONFIGURATION
